@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f0f0f;
+    --surface: #1a1a1a;
+    --surface2: #222;
+    --surface3: #2a2a2a;
+    --border: #333;
+    --text: #f0ede6;
+    --text2: #888;
+    --text3: #555;
+    --orange: #e8935a;
+    --orange-dim: #c07040;
+    --orange-glow: #e8935a22;
+    --green: #5ac8a8;
+    --red: #e85a7a;
+    --btn: #1e1e1e;
+    --btn-hover: #282828;
+    --btn-active: #141414;
+  }
+
+  body {
+    background: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  .calc-wrap { width: 340px; }
+
+  .calc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+  }
+
+  /* ── Display ── */
+  .display {
+    background: var(--bg);
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border);
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 6px;
+  }
+
+  .status-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+
+  .mode-badge {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--orange);
+    background: var(--orange-glow);
+    border: 1px solid #e8935a33;
+    padding: 2px 8px;
+    border-radius: 100px;
+  }
+
+  .keyboard-hint {
+    font-size: 10px;
+    color: var(--text3);
+    margin-left: auto;
+  }
+
+  .history {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text2);
+    min-height: 18px;
+    text-align: right;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+  }
+
+  .expression {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    color: var(--text2);
+    text-align: right;
+    min-height: 22px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .result {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 38px;
+    font-weight: 300;
+    color: var(--text);
+    text-align: right;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    transition: color 0.1s, transform 0.1s;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .result.pulse {
+    color: var(--orange);
+    transform: scale(1.015);
+  }
+
+  /* ── Keypad ── */
+  .keypad {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+  }
+
+  .keypad > * { background: var(--btn); }
+
+  .btn {
+    border: none;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--text);
+    padding: 0;
+    height: 72px;
+    background: var(--btn);
+    transition: background 0.08s, transform 0.06s, color 0.1s;
+    outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn:hover  { background: var(--btn-hover); }
+  .btn:active, .btn.active-flash { background: var(--btn-active); transform: scale(0.94); }
+
+  .btn.op          { color: var(--orange); font-size: 20px; }
+  .btn.op:hover    { background: #1c1c1c; }
+  .btn.op.pressed  { color: #fff; background: var(--orange-dim); }
+
+  .btn.fn  { color: var(--text2); font-size: 15px; font-weight: 500; }
+  .btn.fn:hover { color: var(--text); }
+
+  .btn.clear       { color: var(--red); font-size: 15px; font-weight: 500; }
+  .btn.clear:hover { color: #ff6b6b; }
+
+  .btn.del  { color: var(--text2); font-size: 15px; }
+  .btn.del:hover { color: var(--text); }
+
+  .btn.pct  { color: var(--text2); font-size: 15px; }
+
+  .btn.eq        { background: var(--orange); color: #fff; font-size: 22px; }
+  .btn.eq:hover  { background: #d4834a; }
+  .btn.eq:active { background: var(--orange-dim); }
+
+  .btn.zero {
+    grid-column: span 2;
+    justify-content: flex-start;
+    padding-left: 28px;
+  }
+
+  /* Ripple */
+  .ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+    pointer-events: none;
+    transform: scale(0);
+    animation: ripple 0.4s ease-out forwards;
+  }
+  @keyframes ripple { to { transform: scale(4); opacity: 0; } }
+
+  /* ── Footer ── */
+  .calc-footer {
+    padding: 10px 20px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-keys { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  .key-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 5px;
+  }
+
+  .footer-label {
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.04em;
+  }
+</style>
+</head>
+<body>
+
+<div class="calc-wrap">
+  <div class="calc">
+
+    <!-- Display -->
+    <div class="display">
+      <div class="status-bar">
+        <span class="mode-badge">Calculator</span>
+        <span class="keyboard-hint">keyboard ready</span>
+      </div>
+      <div class="history"   id="hist"></div>
+      <div class="expression" id="expr"></div>
+      <div class="result"     id="result">0</div>
+    </div>
+
+    <!-- Keys -->
+    <div class="keypad">
+      <button class="btn fn clear" data-val="AC">AC</button>
+      <button class="btn fn del"   data-val="DEL">⌫</button>
+      <button class="btn fn pct"   data-val="%">%</button>
+      <button class="btn op"       data-val="÷">÷</button>
+
+      <button class="btn" data-val="7">7</button>
+      <button class="btn" data-val="8">8</button>
+      <button class="btn" data-val="9">9</button>
+      <button class="btn op" data-val="×">×</button>
+
+      <button class="btn" data-val="4">4</button>
+      <button class="btn" data-val="5">5</button>
+      <button class="btn" data-val="6">6</button>
+      <button class="btn op" data-val="−">−</button>
+
+      <button class="btn" data-val="1">1</button>
+      <button class="btn" data-val="2">2</button>
+      <button class="btn" data-val="3">3</button>
+      <button class="btn op" data-val="+">+</button>
+
+      <button class="btn zero" data-val="0">0</button>
+      <button class="btn"      data-val=".">.</button>
+      <button class="btn eq"   data-val="=">=</button>
+    </div>
+
+    <!-- Footer -->
+    <div class="calc-footer">
+      <div class="footer-keys">
+        <span class="key-chip">0–9</span>
+        <span class="key-chip">+ − * /</span>
+        <span class="key-chip">Enter</span>
+        <span class="key-chip">Esc</span>
+        <span class="key-chip">Backspace</span>
+      </div>
+      <span class="footer-label">⌨ keyboard</span>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const resultEl = document.getElementById('result');
+  const exprEl   = document.getElementById('expr');
+  const histEl   = document.getElementById('hist');
+
+  let current = '0', prev = '', op = '', justEvaled = false, hasDecimal = false;
+
+  /* ── Helpers ── */
+  function fmt(n) {
+    if (n === '' || n === '-') return n;
+    let num = parseFloat(n);
+    if (isNaN(num)) return n;
+    if (Math.abs(num) >= 1e12) return num.toExponential(4);
+    return parseFloat(num.toPrecision(12)).toString();
+  }
+
+  function updateDisplay() {
+    let disp = current === '' ? '0' : current;
+    if (disp.length > 14) {
+      let num = parseFloat(disp);
+      disp = isNaN(num) ? disp : num.toExponential(6);
+    }
+    resultEl.textContent = disp;
+    exprEl.textContent = (op && prev !== '') ? prev + ' ' + op : '';
+  }
+
+  function flash() {
+    resultEl.classList.add('pulse');
+    setTimeout(() => resultEl.classList.remove('pulse'), 150);
+  }
+
+  function rippleEffect(btn, e) {
+    const r    = document.createElement('span');
+    r.className = 'ripple';
+    const rect = btn.getBoundingClientRect();
+    const x    = (e && e.clientX ? e.clientX : rect.left + rect.width  / 2) - rect.left;
+    const y    = (e && e.clientY ? e.clientY : rect.top  + rect.height / 2) - rect.top;
+    const size = Math.max(rect.width, rect.height) * 1.5;
+    r.style.cssText = `width:${size}px;height:${size}px;left:${x - size/2}px;top:${y - size/2}px`;
+    btn.appendChild(r);
+    setTimeout(() => r.remove(), 500);
+  }
+
+  function calculate(a, b, o) {
+    let x = parseFloat(a), y = parseFloat(b);
+    if (isNaN(x) || isNaN(y)) return a;
+    let res;
+    if      (o === '÷') { if (y === 0) return 'Error'; res = x / y; }
+    else if (o === '×')   res = x * y;
+    else if (o === '−')   res = x - y;
+    else if (o === '+')   res = x + y;
+    else return b;
+    return fmt(parseFloat(res.toPrecision(12)).toString());
+  }
+
+  /* ── Main handler ── */
+  function handleVal(v, e) {
+    const btn = [...document.querySelectorAll('.btn')].find(b => b.dataset.val === v);
+    if (btn) rippleEffect(btn, e);
+
+    /* Clear */
+    if (v === 'AC') {
+      current = '0'; prev = ''; op = ''; justEvaled = false; hasDecimal = false;
+      histEl.textContent = ''; exprEl.textContent = '';
+      updateDisplay(); return;
+    }
+
+    /* Delete */
+    if (v === 'DEL') {
+      if (current === '0' || current === '' || current === 'Error') {
+        current = '0'; hasDecimal = false;
+      } else {
+        const del = current.slice(0, -1);
+        if (!del.includes('.')) hasDecimal = false;
+        current = del || '0';
+      }
+      updateDisplay(); return;
+    }
+
+    /* Percent */
+    if (v === '%') {
+      if (current !== '' && current !== 'Error') {
+        current = fmt((parseFloat(current) / 100).toString());
+        flash(); updateDisplay();
+      }
+      return;
+    }
+
+    /* Operators */
+    if (['+', '−', '×', '÷'].includes(v)) {
+      document.querySelectorAll('.btn.op').forEach(b => b.classList.remove('pressed'));
+      if (btn) btn.classList.add('pressed');
+      if (op && !justEvaled && prev !== '') {
+        const res = calculate(prev, current, op);
+        prev = res; current = res; flash();
+      } else {
+        prev = current;
+      }
+      op = v; justEvaled = false; current = ''; hasDecimal = false;
+      updateDisplay(); return;
+    }
+
+    /* Equals */
+    if (v === '=') {
+      document.querySelectorAll('.btn.op').forEach(b => b.classList.remove('pressed'));
+      if (op && prev !== '') {
+        const expr = prev + ' ' + op + ' ' + (current || '0');
+        const res  = calculate(prev, current || '0', op);
+        histEl.textContent = expr + ' =';
+        prev = ''; current = res; op = ''; justEvaled = true;
+        hasDecimal = current.includes('.');
+        flash(); updateDisplay();
+      }
+      return;
+    }
+
+    /* Decimal */
+    if (v === '.') {
+      if (justEvaled) { current = '0'; prev = ''; op = ''; justEvaled = false; }
+      if (!hasDecimal) { current = (current || '0') + '.'; hasDecimal = true; }
+      updateDisplay(); return;
+    }
+
+    /* Digits */
+    if (!isNaN(v)) {
+      if (justEvaled) { current = ''; prev = ''; op = ''; justEvaled = false; hasDecimal = false; }
+      current = (current === '0') ? v : (current || '') + v;
+      if (current.replace('-', '').replace('.', '').length > 15) return;
+      updateDisplay();
+    }
+  }
+
+  /* ── Button clicks ── */
+  document.querySelectorAll('.btn').forEach(btn => {
+    btn.addEventListener('click', e => handleVal(btn.dataset.val, e));
+  });
+
+  /* ── Keyboard support ── */
+  const keyMap = {
+    '0':'0','1':'1','2':'2','3':'3','4':'4',
+    '5':'5','6':'6','7':'7','8':'8','9':'9',
+    '+':'+', '-':'−', '*':'×', '/':'÷',
+    'Enter':'=', '=':'=',
+    'Backspace':'DEL', 'Escape':'AC',
+    '%':'%', '.':'.'
+  };
+
+  document.addEventListener('keydown', e => {
+    const v = keyMap[e.key];
+    if (v) {
+      e.preventDefault();
+      handleVal(v, null);
+      const btn = [...document.querySelectorAll('.btn')].find(b => b.dataset.val === v);
+      if (btn) {
+        btn.classList.add('active-flash');
+        setTimeout(() => btn.classList.remove('active-flash'), 120);
+      }
+    }
+  });
+
+  updateDisplay();
+</script>
+</body>
+</html>

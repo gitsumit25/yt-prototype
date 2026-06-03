@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sumit Chahar — Web Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --navy:#0b1f3a;
+  --navy-mid:#122844;
+  --navy-light:#1a3558;
+  --gold:#c9a84c;
+  --gold-light:#e2c97e;
+  --gold-pale:#f5edd8;
+  --cream:#fafaf7;
+  --white:#ffffff;
+  --text:#1a1a2e;
+  --text2:#4a5568;
+  --text3:#718096;
+  --border:#e2e8f0;
+  --shadow:0 4px 24px rgba(11,31,58,0.10);
+  --shadow-lg:0 16px 48px rgba(11,31,58,0.16);
+}
+
+html{scroll-behavior:smooth}
+
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--cream);
+  color:var(--text);
+  line-height:1.6;
+  overflow-x:hidden;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--cream)}
+::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(250,250,247,0.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0 5%;
+  display:flex;align-items:center;justify-content:space-between;
+  height:64px;
+  transition:box-shadow 0.3s;
+}
+nav.scrolled{box-shadow:var(--shadow)}
+.nav-logo{
+  font-family:'Roboto',sans-serif;
+  font-size:20px;font-weight:700;
+  color:var(--navy);
+  letter-spacing:0.01em;
+}
+.nav-logo span{color:var(--gold)}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{
+  font-size:14px;font-weight:500;
+  color:var(--text2);text-decoration:none;
+  letter-spacing:0.04em;text-transform:uppercase;
+  transition:color 0.2s;
+  position:relative;padding-bottom:2px;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:0;left:0;
+  width:0;height:1.5px;background:var(--gold);
+  transition:width 0.25s;
+}
+.nav-links a:hover{color:var(--navy)}
+.nav-links a:hover::after{width:100%}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;
+  background:var(--navy);
+  display:flex;align-items:center;
+  position:relative;overflow:hidden;
+  padding:100px 5% 60px;
+}
+.hero-bg-lines{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(201,168,76,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(201,168,76,0.04) 1px,transparent 1px);
+  background-size:60px 60px;
+}
+.hero-accent{
+  position:absolute;top:-120px;right:-120px;
+  width:520px;height:520px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(201,168,76,0.12) 0%,transparent 70%);
+}
+.hero-accent2{
+  position:absolute;bottom:-80px;left:-80px;
+  width:340px;height:340px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(201,168,76,0.07) 0%,transparent 70%);
+}
+.hero-inner{
+  max-width:1100px;margin:0 auto;width:100%;
+  display:grid;grid-template-columns:1fr 380px;
+  gap:60px;align-items:center;
+  position:relative;z-index:1;
+}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(201,168,76,0.12);
+  border:1px solid rgba(201,168,76,0.3);
+  color:var(--gold-light);
+  font-size:12px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;
+  padding:6px 14px;border-radius:100px;
+  margin-bottom:24px;
+  animation:fadeUp 0.6s ease both;
+}
+.hero-tag::before{content:'';width:6px;height:6px;background:var(--gold);border-radius:50%}
+.hero-name{
+  font-family:'Roboto',sans-serif;
+  font-size:clamp(44px,6vw,76px);
+  font-weight:700;color:var(--white);
+  line-height:1.08;letter-spacing:-0.02em;
+  margin-bottom:20px;
+  animation:fadeUp 0.6s 0.1s ease both;
+}
+.hero-name em{color:var(--gold-light);font-style:normal}
+.hero-intro{
+  font-size:17px;font-weight:300;color:rgba(255,255,255,0.68);
+  max-width:540px;line-height:1.75;
+  margin-bottom:36px;
+  animation:fadeUp 0.6s 0.2s ease both;
+}
+.hero-btns{
+  display:flex;gap:14px;flex-wrap:wrap;
+  animation:fadeUp 0.6s 0.3s ease both;
+}
+.btn-primary{
+  background:var(--gold);color:var(--navy);
+  font-size:14px;font-weight:600;letter-spacing:0.04em;
+  padding:13px 28px;border-radius:6px;
+  text-decoration:none;border:none;cursor:pointer;
+  transition:background 0.2s,transform 0.15s,box-shadow 0.2s;
+  box-shadow:0 4px 16px rgba(201,168,76,0.35);
+}
+.btn-primary:hover{background:var(--gold-light);transform:translateY(-2px);box-shadow:0 8px 24px rgba(201,168,76,0.45)}
+.btn-secondary{
+  background:transparent;color:rgba(255,255,255,0.8);
+  font-size:14px;font-weight:500;letter-spacing:0.04em;
+  padding:13px 28px;border-radius:6px;
+  text-decoration:none;border:1px solid rgba(255,255,255,0.2);cursor:pointer;
+  transition:border-color 0.2s,color 0.2s,transform 0.15s;
+}
+.btn-secondary:hover{border-color:var(--gold);color:var(--gold-light);transform:translateY(-2px)}
+/* Avatar Card */
+.hero-card{
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(201,168,76,0.2);
+  border-radius:16px;padding:36px 28px;
+  text-align:center;
+  backdrop-filter:blur(8px);
+  animation:fadeUp 0.7s 0.2s ease both;
+}
+.avatar{
+  width:110px;height:110px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold) 0%,var(--navy-light) 100%);
+  margin:0 auto 18px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Roboto',sans-serif;
+  font-size:42px;font-weight:700;color:var(--white);
+  border:3px solid rgba(201,168,76,0.4);
+  box-shadow:0 8px 32px rgba(201,168,76,0.2);
+}
+.card-name{font-family:'Roboto',sans-serif;font-size:20px;font-weight:600;color:var(--white);margin-bottom:4px}
+.card-role{font-size:13px;color:var(--gold-light);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:20px}
+.card-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,0.08);border-radius:10px;overflow:hidden;margin-top:4px}
+.stat{background:rgba(255,255,255,0.03);padding:14px 10px;text-align:center}
+.stat-num{font-family:'Roboto',sans-serif;font-size:22px;font-weight:600;color:var(--gold-light)}
+.stat-label{font-size:11px;color:rgba(255,255,255,0.45);letter-spacing:0.06em;text-transform:uppercase;margin-top:2px}
+.hero-scroll{
+  position:absolute;bottom:36px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  color:rgba(255,255,255,0.3);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;
+}
+.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,rgba(201,168,76,0.5),transparent);animation:scrollPulse 2s infinite}
+
+/* ── SECTION BASE ── */
+section{padding:90px 5%}
+.section-inner{max-width:1100px;margin:0 auto}
+.section-label{
+  font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:12px;
+  display:flex;align-items:center;gap:10px;
+}
+.section-label::before{content:'';width:28px;height:1.5px;background:var(--gold)}
+.section-title{
+  font-family:'Roboto',sans-serif;
+  font-size:clamp(30px,4vw,44px);font-weight:700;
+  color:var(--navy);line-height:1.15;margin-bottom:16px;
+}
+.section-sub{font-size:16px;color:var(--text2);max-width:520px;line-height:1.7}
+.divider{width:52px;height:3px;background:linear-gradient(to right,var(--gold),transparent);margin:20px 0 48px;border-radius:2px}
+
+/* ── ABOUT ── */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.about-text p{font-size:16px;color:var(--text2);line-height:1.8;margin-bottom:18px}
+.about-text p:last-child{margin-bottom:0}
+.about-highlights{display:flex;flex-direction:column;gap:16px}
+.highlight-item{
+  display:flex;align-items:flex-start;gap:16px;
+  background:var(--white);border:1px solid var(--border);
+  border-radius:10px;padding:18px 20px;
+  box-shadow:var(--shadow);
+  transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;
+}
+.highlight-item:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:var(--gold)}
+.hi-icon{
+  width:40px;height:40px;border-radius:8px;
+  background:var(--gold-pale);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.hi-title{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:3px}
+.hi-desc{font-size:13px;color:var(--text2)}
+
+/* ── SKILLS ── */
+.skills-bg{background:var(--navy)}
+.skills-bg .section-title{color:var(--white)}
+.skills-bg .section-sub{color:rgba(255,255,255,0.55)}
+.skills-bg .section-label{color:var(--gold-light)}
+.skills-bg .section-label::before{background:var(--gold-light)}
+.skills-bg .divider{background:linear-gradient(to right,var(--gold-light),transparent)}
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px}
+.skill-card{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(201,168,76,0.15);
+  border-radius:14px;padding:28px 24px;
+  transition:background 0.2s,border-color 0.2s,transform 0.2s;
+  position:relative;overflow:hidden;
+}
+.skill-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(to right,var(--gold),transparent);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform 0.3s;
+}
+.skill-card:hover{background:rgba(255,255,255,0.07);border-color:rgba(201,168,76,0.4);transform:translateY(-4px)}
+.skill-card:hover::before{transform:scaleX(1)}
+.skill-icon{font-size:32px;margin-bottom:14px;display:block}
+.skill-name{font-size:16px;font-weight:600;color:var(--white);margin-bottom:6px}
+.skill-desc{font-size:13px;color:rgba(255,255,255,0.45);line-height:1.5;margin-bottom:18px}
+.skill-bar-wrap{background:rgba(255,255,255,0.08);border-radius:100px;height:4px;overflow:hidden}
+.skill-bar{height:100%;border-radius:100px;background:linear-gradient(to right,var(--gold),var(--gold-light));width:0;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.skill-pct{font-size:11px;color:var(--gold-light);font-weight:500;margin-top:6px;text-align:right}
+
+/* ── PROJECTS ── */
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px}
+.project-card{
+  background:var(--white);border:1px solid var(--border);border-radius:14px;
+  overflow:hidden;box-shadow:var(--shadow);
+  transition:transform 0.25s,box-shadow 0.25s,border-color 0.25s;
+}
+.project-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg);border-color:var(--gold)}
+.project-thumb{
+  height:160px;display:flex;align-items:center;justify-content:center;
+  font-size:48px;position:relative;overflow:hidden;
+}
+.project-thumb::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to bottom,transparent 40%,rgba(0,0,0,0.18));
+}
+.project-body{padding:22px 24px 26px}
+.project-tag{
+  font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--gold);background:var(--gold-pale);
+  padding:3px 10px;border-radius:100px;display:inline-block;margin-bottom:12px;
+}
+.project-title{font-family:'Roboto',sans-serif;font-size:19px;font-weight:600;color:var(--navy);margin-bottom:8px}
+.project-desc{font-size:14px;color:var(--text2);line-height:1.65;margin-bottom:18px}
+.project-tech{display:flex;flex-wrap:wrap;gap:6px}
+.tech-badge{
+  font-size:11px;font-weight:500;color:var(--navy);
+  background:var(--cream);border:1px solid var(--border);
+  padding:3px 10px;border-radius:100px;
+}
+
+/* ── CONTACT ── */
+.contact-bg{background:var(--navy)}
+.contact-bg .section-title{color:var(--white)}
+.contact-bg .section-sub{color:rgba(255,255,255,0.55)}
+.contact-bg .section-label{color:var(--gold-light)}
+.contact-bg .section-label::before{background:var(--gold-light)}
+.contact-bg .divider{background:linear-gradient(to right,var(--gold-light),transparent)}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.contact-items{display:flex;flex-direction:column;gap:16px}
+.contact-item{
+  display:flex;align-items:center;gap:16px;
+  background:rgba(255,255,255,0.05);border:1px solid rgba(201,168,76,0.15);
+  border-radius:12px;padding:18px 20px;
+  text-decoration:none;
+  transition:background 0.2s,border-color 0.2s,transform 0.2s;
+}
+.contact-item:hover{background:rgba(255,255,255,0.09);border-color:rgba(201,168,76,0.4);transform:translateX(6px)}
+.ci-icon{
+  width:44px;height:44px;border-radius:10px;
+  background:rgba(201,168,76,0.15);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+}
+.ci-label{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold-light);margin-bottom:3px}
+.ci-val{font-size:14px;color:rgba(255,255,255,0.8)}
+/* Form */
+.contact-form{display:flex;flex-direction:column;gap:14px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-label{font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:rgba(255,255,255,0.5)}
+.form-input,.form-textarea{
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:8px;padding:12px 16px;
+  font-family:'DM Sans',sans-serif;font-size:14px;
+  color:var(--white);outline:none;
+  transition:border-color 0.2s,background 0.2s;
+}
+.form-input::placeholder,.form-textarea::placeholder{color:rgba(255,255,255,0.25)}
+.form-input:focus,.form-textarea:focus{border-color:var(--gold);background:rgba(255,255,255,0.09)}
+.form-textarea{resize:vertical;min-height:110px}
+.form-submit{
+  background:var(--gold);color:var(--navy);
+  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;letter-spacing:0.05em;
+  padding:14px;border-radius:8px;border:none;cursor:pointer;
+  transition:background 0.2s,transform 0.15s,box-shadow 0.2s;
+  box-shadow:0 4px 16px rgba(201,168,76,0.3);
+  margin-top:4px;
+}
+.form-submit:hover{background:var(--gold-light);transform:translateY(-2px);box-shadow:0 8px 24px rgba(201,168,76,0.45)}
+
+/* ── FOOTER ── */
+footer{
+  background:#07131f;
+  padding:28px 5%;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:12px;
+}
+.footer-logo{font-family:'Roboto',sans-serif;font-size:18px;font-weight:700;color:rgba(255,255,255,0.7)}
+.footer-logo span{color:var(--gold)}
+.footer-copy{font-size:12px;color:rgba(255,255,255,0.3);letter-spacing:0.04em}
+.footer-links{display:flex;gap:20px}
+.footer-links a{font-size:12px;color:rgba(255,255,255,0.35);text-decoration:none;transition:color 0.2s;letter-spacing:0.04em;text-transform:uppercase}
+.footer-links a:hover{color:var(--gold-light)}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes scrollPulse{0%,100%{opacity:0.3;transform:scaleY(1)}50%{opacity:0.8;transform:scaleY(1.2)}}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.65s ease,transform 0.65s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:0.1s}
+.reveal-delay-2{transition-delay:0.2s}
+.reveal-delay-3{transition-delay:0.3s}
+.reveal-delay-4{transition-delay:0.4s}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;text-align:center}
+  .hero-card{max-width:320px;margin:0 auto}
+  .hero-intro{margin:0 auto 36px}
+  .hero-btns{justify-content:center}
+  .about-grid,.contact-grid{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+  nav .nav-links{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo">Sumit <span>Chahar</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg-lines"></div>
+  <div class="hero-accent"></div>
+  <div class="hero-accent2"></div>
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-tag">Available for opportunities</div>
+      <h1 class="hero-name">Sumit<br/><em>Chahar</em></h1>
+      <p class="hero-intro">A web development enthusiast passionate about building modern, responsive, and user-friendly websites that deliver exceptional digital experiences.</p>
+      <div class="hero-btns">
+        <a href="#contact" class="btn-primary">Get In Touch</a>
+        <a href="#projects" class="btn-secondary">View Projects</a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="avatar">SC</div>
+      <div class="card-name">Sumit Chahar</div>
+      <div class="card-role">Web Developer</div>
+      <div class="card-stats">
+        <div class="stat"><div class="stat-num">5+</div><div class="stat-label">Languages</div></div>
+        <div class="stat"><div class="stat-num">1</div><div class="stat-label">Project</div></div>
+        <div class="stat"><div class="stat-num">2×</div><div class="stat-label">Hackathon</div></div>
+        <div class="stat"><div class="stat-num">∞</div><div class="stat-label">Curiosity</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-inner">
+    <div class="section-label">About Me</div>
+    <h2 class="section-title">Who I Am</h2>
+    <div class="divider"></div>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>I'm Sumit Chahar, a driven and detail-oriented web developer with a strong foundation in both front-end and back-end technologies. I enjoy turning complex problems into clean, elegant solutions.</p>
+        <p>From crafting pixel-perfect interfaces in HTML & CSS, to building logic-driven backends in Python and C, I bring a full-stack mindset to every project I take on. My work is guided by clarity, performance, and great user experience.</p>
+        <p>I'm also an active member of the <strong>FleetForge</strong> team — a startup that earned recognition at Hacknovate 7.0 International Edition and access to the ABESIT Incubation Forum, reflecting my belief in collaborative innovation.</p>
+      </div>
+      <div class="about-highlights reveal reveal-delay-1">
+        <div class="highlight-item">
+          <div class="hi-icon">🏆</div>
+          <div><div class="hi-title">Hacknovate 7.0 — Top 10</div><div class="hi-desc">International hackathon recognition with team FleetForge at ABESIT.</div></div>
+        </div>
+        <div class="highlight-item">
+          <div class="hi-icon">🚀</div>
+          <div><div class="hi-title">ABESIT Incubation Forum</div><div class="hi-desc">Selected for incubation support — two consecutive recognitions.</div></div>
+        </div>
+        <div class="highlight-item">
+          <div class="hi-icon">💻</div>
+          <div><div class="hi-title">Full-Stack Mindset</div><div class="hi-desc">Comfortable across C, Python, HTML, CSS & JavaScript.</div></div>
+        </div>
+        <div class="highlight-item">
+          <div class="hi-icon">🎯</div>
+          <div><div class="hi-title">Detail-Oriented Builder</div><div class="hi-desc">Every pixel, every function — crafted with precision and purpose.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section class="skills-bg" id="skills">
+  <div class="section-inner">
+    <div class="section-label">Technical Skills</div>
+    <h2 class="section-title">What I Work With</h2>
+    <div class="divider"></div>
+    <div class="skills-grid">
+      <div class="skill-card reveal" data-pct="88">
+        <span class="skill-icon">🌐</span>
+        <div class="skill-name">HTML</div>
+        <div class="skill-desc">Semantic markup, accessibility, and structured web layouts.</div>
+        <div class="skill-bar-wrap"><div class="skill-bar"></div></div>
+        <div class="skill-pct">88%</div>
+      </div>
+      <div class="skill-card reveal reveal-delay-1" data-pct="85">
+        <span class="skill-icon">🎨</span>
+        <div class="skill-name">CSS</div>
+        <div class="skill-desc">Responsive design, animations, Flexbox, and Grid layouts.</div>
+        <div class="skill-bar-wrap"><div class="skill-bar"></div></div>
+        <div class="skill-pct">85%</div>
+      </div>
+      <div class="skill-card reveal reveal-delay-2" data-pct="80">
+        <span class="skill-icon">⚡</span>
+        <div class="skill-name">JavaScript</div>
+        <div class="skill-desc">DOM manipulation, async logic, and interactive UI development.</div>
+        <div class="skill-bar-wrap"><div class="skill-bar"></div></div>
+        <div class="skill-pct">80%</div>
+      </div>
+      <div class="skill-card reveal reveal-delay-3" data-pct="78">
+        <span class="skill-icon">🐍</span>
+        <div class="skill-name">Python</div>
+        <div class="skill-desc">Scripting, automation, data processing, and backend logic.</div>
+        <div class="skill-bar-wrap"><div class="skill-bar"></div></div>
+        <div class="skill-pct">78%</div>
+      </div>
+      <div class="skill-card reveal reveal-delay-4" data-pct="72">
+        <span class="skill-icon">⚙️</span>
+        <div class="skill-name">C</div>
+        <div class="skill-desc">Systems programming, memory management, and algorithms.</div>
+        <div class="skill-bar-wrap"><div class="skill-bar"></div></div>
+        <div class="skill-pct">72%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-inner">
+    <div class="section-label">Projects</div>
+    <h2 class="section-title">Things I've Built</h2>
+    <div class="divider"></div>
+    <div class="projects-grid">
+      <div class="project-card reveal">
+        <div class="project-thumb" style="background:linear-gradient(135deg,#0b1f3a,#1a3558)">🚗</div>
+        <div class="project-body">
+          <span class="project-tag">Startup</span>
+          <div class="project-title">FleetForge</div>
+          <div class="project-desc">A web-based marketplace for booking heavy-duty vehicles and logistics equipment. Features real-time availability & booking via Firebase, and map-based location tracking using Leaflet.js and Geocoder.</div>
+          <div class="project-tech">
+            <span class="tech-badge">JavaScript</span>
+            <span class="tech-badge">Firebase</span>
+            <span class="tech-badge">Leaflet.js</span>
+            <span class="tech-badge">HTML/CSS</span>
+          </div>
+          <a href="https://industrial-vehicles-booking.web.app" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-size:13px;font-weight:600;color:var(--gold);text-decoration:none;letter-spacing:0.03em;transition:gap 0.2s;" onmouseover="this.style.gap='10px'" onmouseout="this.style.gap='6px'">View Live Project →</a>
+        </div>
+      </div>
+      <div class="project-card reveal reveal-delay-1">
+        <div class="project-thumb" style="background:linear-gradient(135deg,#1a1a2e,#2d3748)">🧮</div>
+        <div class="project-body">
+          <span class="project-tag">Web App</span>
+          <div class="project-title">Smart Calculator</div>
+          <div class="project-desc">A feature-rich calculator with all arithmetic operations, expression history, keyboard support, and a sleek dark UI with ripple animations.</div>
+          <div class="project-tech">
+            <span class="tech-badge">HTML</span>
+            <span class="tech-badge">CSS</span>
+            <span class="tech-badge">JavaScript</span>
+          </div>
+        </div>
+      </div>
+      <div class="project-card reveal reveal-delay-2">
+        <div class="project-thumb" style="background:linear-gradient(135deg,#1a3558,#2a6049)">🐍</div>
+        <div class="project-body">
+          <span class="project-tag">Python Tool</span>
+          <div class="project-title">Metadata Processor</div>
+          <div class="project-desc">A Python script leveraging ExifTool for automated metadata extraction and processing from files, with robust path handling on Windows.</div>
+          <div class="project-tech">
+            <span class="tech-badge">Python</span>
+            <span class="tech-badge">ExifTool</span>
+            <span class="tech-badge">Automation</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-bg" id="contact">
+  <div class="section-inner">
+    <div class="section-label">Contact</div>
+    <h2 class="section-title">Let's Connect</h2>
+    <div class="divider"></div>
+    <div class="contact-grid">
+      <div>
+        <p style="font-size:16px;color:rgba(255,255,255,0.55);line-height:1.75;margin-bottom:28px;">Whether you have a project in mind, a collaboration opportunity, or just want to say hello — my inbox is always open.</p>
+        <div class="contact-items">
+          <a class="contact-item" href="mailto:sumitchahar0912@gmail.com">
+            <div class="ci-icon">📧</div>
+            <div><div class="ci-label">Email</div><div class="ci-val">sumitchahar0912@gmail.com</div></div>
+          </a>
+          <a class="contact-item" href="https://linkedin.com/in/sumitchahar" target="_blank">
+            <div class="ci-icon">💼</div>
+            <div><div class="ci-label">LinkedIn</div><div class="ci-val">linkedin.com/in/sumitchahar</div></div>
+          </a>
+          <a class="contact-item" href="https://github.com/gitsumit25" target="_blank">
+            <div class="ci-icon">🐙</div>
+            <div><div class="ci-label">GitHub</div><div class="ci-val">github.com/gitsumit25</div></div>
+          </a>
+          <a class="contact-item" href="#">
+            <div class="ci-icon">📍</div>
+            <div><div class="ci-label">Location</div><div class="ci-val">Ghaziabad, Uttar Pradesh, India</div></div>
+          </a>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="contact-form">
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Name</label><input class="form-input" type="text" placeholder="Your name"/></div>
+            <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" placeholder="your@email.com"/></div>
+          </div>
+          <div class="form-group"><label class="form-label">Subject</label><input class="form-input" type="text" placeholder="What's it about?"/></div>
+          <div class="form-group"><label class="form-label">Message</label><textarea class="form-textarea" placeholder="Tell me about your project or idea..."></textarea></div>
+          <button class="form-submit" onclick="handleSubmit(event)">Send Message →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Sumit <span>Chahar</span></div>
+  <div class="footer-copy">© 2025 Sumit Chahar. All rights reserved.</div>
+  <div class="footer-links">
+    <a href="#home">Home</a>
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#contact">Contact</a>
+  </div>
+</footer>
+
+<script>
+// Navbar scroll effect
+window.addEventListener('scroll',()=>{
+  document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>20);
+});
+
+// Reveal on scroll
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      // Animate skill bars
+      const bar=e.target.querySelector && e.target.querySelector('.skill-bar');
+      if(bar){
+        const pct=e.target.dataset.pct||'0';
+        setTimeout(()=>{bar.style.width=pct+'%'},100);
+      }
+    }
+  });
+},{threshold:0.15});
+
+document.querySelectorAll('.reveal,.skill-card').forEach(el=>observer.observe(el));
+
+// Form submit
+function handleSubmit(e){
+  e.preventDefault();
+  const btn=e.target;
+  btn.textContent='Message Sent ✓';
+  btn.style.background='#5ac8a8';
+  setTimeout(()=>{btn.textContent='Send Message →';btn.style.background='';},3000);
+}
+
+// Smooth active nav link highlight
+const sections=document.querySelectorAll('section[id]');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  sections.forEach(s=>{if(window.scrollY>=s.offsetTop-80)cur=s.id});
+  document.querySelectorAll('.nav-links a').forEach(a=>{
+    a.style.color=a.getAttribute('href')==='#'+cur?'var(--navy)':'';
+  });
+});
+</script>
+</body>
+</html>
